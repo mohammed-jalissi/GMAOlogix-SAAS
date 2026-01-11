@@ -117,9 +117,8 @@ const Pricing = () => {
         }
 
         const today = new Date().toLocaleDateString('fr-FR');
-        // Calculate Annual Total (Monthly * 12)
-        const monthlyPrice = selectedPlan.rawValue;
-        const annualPrice = monthlyPrice * 12;
+        // Calculate Annual Total (rawValue is now Annual Price)
+        const annualPrice = selectedPlan.rawValue;
         const totalHT = annualPrice;
         const tva = (totalHT * 0.2);
         const totalTTC = (totalHT * 1.2);
@@ -192,7 +191,7 @@ const Pricing = () => {
         const description = `Abonnement Pack ${selectedPlan.name}`;
 
         doc.text(description, 17, y);
-        doc.text(`${formatCurrency(selectedPlan.price)} MAD/mois`, 100, y);
+        doc.text(`${formatCurrency(selectedPlan.price)} MAD/an`, 100, y);
         doc.text("12 Mois", 140, y);
         doc.text(`${formatCurrency(annualPrice)} MAD`, 170, y);
 
@@ -288,7 +287,7 @@ const Pricing = () => {
                                 <div className="flex items-baseline gap-1 mb-6">
                                     <span className="text-4xl font-extrabold text-slate-900">{plan.price}</span>
                                     <span className="text-lg font-bold text-primary">DH</span>
-                                    <span className="text-slate-500 font-medium">/ mois HT</span>
+                                    <span className="text-slate-500 font-medium">/ an HT</span>
                                 </div>
                                 <p className="text-sm text-slate-500 mb-6 pb-6 border-b border-slate-100">
                                     Facturation annuelle
@@ -399,7 +398,7 @@ const Pricing = () => {
                                 <select name="plan" value={formData.plan} onChange={handleInputChange} required className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all appearance-none cursor-pointer">
                                     <option value="" disabled>Choisir votre formule</option>
                                     {plans.map((p) => (
-                                        <option key={p.id} value={p.id}>{p.name} - {p.price} DH/mois</option>
+                                        <option key={p.id} value={p.id}>{p.name} - {p.price} DH/an</option>
                                     ))}
                                 </select>
                                 <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
