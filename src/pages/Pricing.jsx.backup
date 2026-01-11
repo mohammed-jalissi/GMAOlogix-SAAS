@@ -1,0 +1,413 @@
+import React, { useRef, useState } from 'react';
+import { Check, HelpCircle, HardDrive, Phone, RefreshCw, Shield, Zap, Users, Building, Mail, Smartphone, FileText } from 'lucide-react';
+import jsPDF from 'jspdf';
+import Button from '../components/Button';
+
+const Pricing = () => {
+    const formRef = useRef(null);
+    const [formData, setFormData] = useState({
+        civility: 'M.',
+        firstName: '',
+        lastName: '',
+        phone: '',
+        email: '',
+        company: '',
+        plan: '',
+        message: ''
+    });
+
+    const plans = [
+        {
+            name: "Jusqu'à 5 utilisateurs",
+            price: "8 900",
+            rawValue: 8900,
+            color: "from-fuchsia-600 to-purple-600",
+            glow: "shadow-fuchsia-500/20",
+            pp_user: "≈ 140 MAD / mois / utilisateur",
+            id: "1-5"
+        },
+        {
+            name: "Entre 6 et 10 utilisateurs",
+            price: "10 900",
+            rawValue: 10900,
+            color: "from-blue-600 to-indigo-600",
+            glow: "shadow-blue-500/20",
+            pp_user: "≈ 90 MAD / mois / utilisateur",
+            id: "6-10"
+        },
+        {
+            name: "Entre 11 et 20 utilisateurs",
+            price: "13 500",
+            rawValue: 13500,
+            color: "from-cyan-600 to-teal-600",
+            glow: "shadow-cyan-500/20",
+            pp_user: "≈ 60 MAD / mois / utilisateur",
+            id: "11-20"
+        },
+        {
+            name: "Entre 21 et 30 utilisateurs",
+            price: "15 900",
+            rawValue: 15900,
+            color: "from-orange-500 to-red-600",
+            glow: "shadow-orange-500/20",
+            pp_user: "≈ 45 MAD / mois / utilisateur",
+            id: "21-30"
+        }
+    ];
+
+    const features = [
+        {
+            icon: <Zap className="w-8 h-8 text-violet-400" />,
+            title: "Fonctionnalités",
+            desc: "Profitez de l'ensemble des fonctionnalités, sans restrictions de quantité ou de module."
+        },
+        {
+            icon: <Users className="w-8 h-8 text-violet-400" />,
+            title: "Mise en place",
+            desc: "Démarrage clé en main : import de vos données, guides en ligne, formation en visio et conseils inclus."
+        },
+        {
+            icon: <Phone className="w-8 h-8 text-violet-400" />,
+            title: "Assistance",
+            desc: "Un doute, une question ? FAQ, téléphone, email et partage d'écran sont à votre disposition."
+        },
+        {
+            icon: <HardDrive className="w-8 h-8 text-violet-400" />,
+            title: "Hébergement Cloud",
+            desc: "Hébergé sur des serveurs sécurisés certifiés ISO 14001 & 50001. Taux de disponibilité 99,98%."
+        },
+        {
+            icon: <Shield className="w-8 h-8 text-violet-400" />,
+            title: "Sauvegardes",
+            desc: "Fichiers et base de données sauvegardés quotidiennement dans 2 datacenters séparés sur 7 jours."
+        },
+        {
+            icon: <RefreshCw className="w-8 h-8 text-violet-400" />,
+            title: "Mises à jour",
+            desc: "Les évolutions, les nouvelles versions et la maintenance du logiciel sont incluses dans tous les forfaits."
+        }
+    ];
+
+    const scrollToForm = (planId) => {
+        setFormData(prev => ({ ...prev, plan: planId }));
+        formRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const generatePDF = (e) => {
+        e.preventDefault();
+
+        const selectedPlan = plans.find(p => p.id === formData.plan);
+        if (!selectedPlan) {
+            alert('Veuillez sélectionner un forfait');
+            return;
+        }
+
+        const today = new Date().toLocaleDateString('fr-FR');
+        const totalHT = selectedPlan.rawValue;
+        const tva = (totalHT * 0.2);
+        const totalTTC = (totalHT * 1.2);
+
+        // Create PDF
+        const doc = new jsPDF();
+
+        // Header with teal background
+        doc.setFillColor(20, 184, 166); // Teal color
+        doc.rect(0, 0, 210, 35, 'F');
+
+        // Company name
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(26);
+        doc.setFont("helvetica", "bold");
+        doc.text("GMAOlogix", 15, 20);
+
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "normal");
+        doc.text("Devis Officiel - Solution GMAO SaaS", 15, 28);
+
+        // Date
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(10);
+        doc.text(`Date: ${today}`, 160, 15);
+
+        // Client Information Section
+        let y = 50;
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(20, 184, 166);
+        doc.text("Informations Client", 15, y);
+
+        y += 10;
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(0, 0, 0);
+        doc.text(`Client: ${formData.civility} ${formData.firstName} ${formData.lastName}`, 15, y);
+
+        y += 6;
+        doc.text(`Societe: ${formData.company}`, 15, y);
+
+        y += 6;
+        doc.text(`Email: ${formData.email}`, 15, y);
+
+        y += 6;
+        doc.text(`Telephone: +212 ${formData.phone}`, 15, y);
+
+        // Plan Details Section
+        y += 15;
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(20, 184, 166);
+        doc.text("Details du Forfait", 15, y);
+
+        // Table header
+        y += 10;
+        doc.setFillColor(20, 184, 166);
+        doc.rect(15, y - 5, 180, 8, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "bold");
+        doc.text("Description", 17, y);
+        doc.text("Prix HT", 110, y);
+        doc.text("Duree", 145, y);
+        doc.text("Total HT", 170, y);
+
+        // Table row 1
+        y += 8;
+        doc.setTextColor(0, 0, 0);
+        doc.setFont("helvetica", "normal");
+        const description = `Abonnement GMAO SaaS - ${selectedPlan.name}`;
+        doc.text(description.substring(0, 50), 17, y);
+        if (description.length > 50) {
+            y += 5;
+            doc.text(description.substring(50), 17, y);
+        }
+        doc.text(`${selectedPlan.price} MAD`, 110, y);
+        doc.text("1 An", 145, y);
+        doc.text(`${selectedPlan.price} MAD`, 170, y);
+
+        // Table row 2
+        y += 8;
+        doc.text("Mise en place, Formation & Support", 17, y);
+        doc.text("Inclus", 110, y);
+        doc.text("-", 145, y);
+        doc.text("0 MAD", 170, y);
+
+        // Horizontal line
+        y += 3;
+        doc.setDrawColor(200, 200, 200);
+        doc.line(15, y, 195, y);
+
+        // Totals Section
+        y += 15;
+        doc.setFontSize(10);
+        doc.text(`Sous-total HT:`, 130, y);
+        doc.setFont("helvetica", "bold");
+        doc.text(`${selectedPlan.price} MAD`, 175, y, { align: 'right' });
+
+        y += 7;
+        doc.setFont("helvetica", "normal");
+        doc.text(`TVA (20%):`, 130, y);
+        doc.setFont("helvetica", "bold");
+        doc.text(`${tva.toFixed(2)} MAD`, 175, y, { align: 'right' });
+
+        y += 10;
+        doc.setFontSize(12);
+        doc.setTextColor(20, 184, 166);
+        doc.text(`Total TTC:`, 130, y);
+        doc.setFont("helvetica", "bold");
+        doc.text(`${totalTTC.toFixed(2)} MAD`, 175, y, { align: 'right' });
+
+        // Footer
+        doc.setFontSize(9);
+        doc.setTextColor(100, 100, 100);
+        doc.setFont("helvetica", "normal");
+        doc.text("GMAOlogix SARL", 105, 270, { align: 'center' });
+        doc.text("Technopark Casablanca, Route de Nouaceur, Casablanca, Maroc", 105, 275, { align: 'center' });
+        doc.text("Email: contact@gmaologix.com | www.gmaologix.com", 105, 280, { align: 'center' });
+        doc.setFont("helvetica", "italic");
+        doc.text("Ce devis est valable 30 jours a compter de la date d'emission.", 105, 287, { align: 'center' });
+
+        // Save the PDF
+        doc.save(`Devis_GMAOlogix_${formData.company || 'Client'}.pdf`);
+
+        // Show success message
+        alert('Le devis PDF a ete genere avec succes!');
+    };
+
+    const Pricing = () => {
+        const formRef = useRef(null);
+        const [formData, setFormData] = useState({
+            civility: 'M.',
+            firstName: '',
+            lastName: '',
+            phone: '',
+            email: '',
+            company: '',
+            plan: '',
+            message: ''
+        });
+
+        return (
+            <div className="min-h-screen pt-32 pb-20">
+                {/* Header */}
+                <div className="container text-center mb-20 animate-fade-in">
+                    <h1 className="text-4xl md:text-5xl font-bold mb-6 text-dark tracking-tight">
+                        Tarifs <span className="text-gradient">simples et transparents</span>
+                    </h1>
+                    <p className="text-xl text-slate-500 max-w-3xl mx-auto">
+                        Forfaits 2025 - Chez nous, la flexibilité est gratuite : modifiez les accès de vos utilisateurs sans surcoût !
+                    </p>
+                </div>
+
+                {/* Pricing Cards */}
+                <div className="container mb-32">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {plans.map((plan, index) => (
+                            <div
+                                key={index}
+                                className={`relative rounded-2xl overflow-hidden glass border-0 transition-all hover:-translate-y-2 hover:shadow-2xl ${plan.glow}`}
+                            >
+                                {/* Card Header Color */}
+                                <div className={`h-2 bg-gradient-to-r ${plan.color}`}></div>
+
+                                <div className="p-8 text-center flex flex-col h-full">
+                                    <h3 className="font-bold text-lg text-dark mb-6 h-12 flex items-center justify-center">
+                                        {plan.name}
+                                    </h3>
+
+                                    <div className={`w-32 h-32 mx-auto rounded-full bg-gradient-to-br ${plan.color} flex flex-col items-center justify-center mb-6 shadow-lg`}>
+                                        <span className="text-3xl font-bold text-white">{plan.price}</span>
+                                        <span className="text-xs text-white/90">DH HT / an</span>
+                                    </div>
+
+                                    <p className="text-sm text-slate-400 mb-8 border-t border-slate-700/50 pt-4">
+                                        {plan.pp_user}
+                                    </p>
+
+                                    <div className="mt-auto">
+                                        <Button
+                                            onClick={() => scrollToForm(plan.id)}
+                                            className="w-full justify-center !bg-slate-800 hover:!bg-slate-700 text-white border border-slate-600"
+                                        >
+                                            Demander un devis
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* All Inclusive Features */}
+                <div className="container mb-32">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl font-bold text-dark mb-4">Enfin un prix <span className="text-violet-500 font-extrabold">tout compris</span></h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {features.map((feature, idx) => (
+                            <div key={idx} className="flex gap-4 p-6 rounded-xl hover:bg-white/60 hover:shadow-md transition-all border border-transparent hover:border-slate-200">
+                                <div className="shrink-0 pt-1">
+                                    {feature.icon}
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-bold text-dark mb-2">{feature.title}</h3>
+                                    <p className="text-slate-500 text-sm leading-relaxed">
+                                        {feature.desc}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Quote Form */}
+                <div ref={formRef} className="container max-w-4xl scroll-mt-32">
+                    <div className="glass-card p-8 md:p-12 rounded-3xl border border-slate-200 bg-white/80 shadow-2xl relative overflow-hidden">
+                        {/* Decorative background gradients */}
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-violet-600/5 blur-[80px] rounded-full -z-10"></div>
+                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/5 blur-[80px] rounded-full -z-10"></div>
+
+                        <h2 className="text-3xl font-bold text-center text-dark mb-10">
+                            Demander un <span className="text-gradient">devis</span>
+                        </h2>
+
+                        <form onSubmit={generatePDF} className="space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="bg-slate-50 border border-slate-200 rounded-xl flex items-center px-4 py-3">
+                                    <span className="text-slate-500 text-xs font-bold uppercase tracking-wider mr-4 border-r border-slate-200 pr-4">Civilité</span>
+                                    <div className="flex gap-4">
+                                        <label className="flex items-center gap-2 cursor-pointer group">
+                                            <input
+                                                type="radio" name="civility" value="M."
+                                                checked={formData.civility === 'M.'} onChange={handleInputChange}
+                                                className="accent-primary"
+                                            />
+                                            <span className="text-sm text-slate-600 group-hover:text-primary transition-colors">M.</span>
+                                        </label>
+                                        <label className="flex items-center gap-2 cursor-pointer group">
+                                            <input
+                                                type="radio" name="civility" value="Mme"
+                                                checked={formData.civility === 'Mme'} onChange={handleInputChange}
+                                                className="accent-primary"
+                                            />
+                                            <span className="text-sm text-slate-600 group-hover:text-primary transition-colors">Mme</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <input type="text" name="firstName" placeholder="Prénom" onChange={handleInputChange} required className="bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-slate-400" />
+                                <input type="text" name="lastName" placeholder="Nom" onChange={handleInputChange} required className="bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-slate-400" />
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="flex">
+                                    <div className="bg-slate-50 border border-slate-200 border-r-0 rounded-l-xl px-4 py-3 text-slate-500 flex items-center text-sm font-medium">
+                                        +212
+                                    </div>
+                                    <input type="tel" name="phone" placeholder="Téléphone" onChange={handleInputChange} required className="w-full bg-white border border-slate-200 rounded-r-xl px-4 py-3 text-slate-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-slate-400" />
+                                </div>
+                                <input type="email" name="email" placeholder="Email professionnel" onChange={handleInputChange} required className="bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-slate-400" />
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-6">
+                                <input type="text" name="company" placeholder="Société" onChange={handleInputChange} required className="bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-slate-400" />
+
+                                <div className="relative">
+                                    <select name="plan" value={formData.plan} onChange={handleInputChange} required className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all appearance-none cursor-pointer">
+                                        <option value="" disabled>Choisir votre forfait : Nombre d'utilisateurs</option>
+                                        {plans.map((p) => (
+                                            <option key={p.id} value={p.id}>{p.name} ({p.price} DH)</option>
+                                        ))}
+                                    </select>
+                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                        <HelpCircle size={18} />
+                                    </div>
+                                </div>
+
+                                <textarea
+                                    name="message"
+                                    placeholder="Quelques mots sur votre société et vos besoins ?"
+                                    rows="4"
+                                    onChange={handleInputChange}
+                                    className="bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-slate-400 resize-none"
+                                ></textarea>
+                            </div>
+
+                            <div className="text-center pt-4">
+                                <Button type="submit" variant="primary" className="text-lg px-12 py-3 shadow-glow gap-2">
+                                    <FileText className="w-5 h-5" />
+                                    Générer mon Devis (PDF)
+                                </Button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    export default Pricing;

@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Modern Industrial Theme */
+  --color-primary: #00A896;
+  --color-primary-dark: #00796b;
+  --color-primary-light: #4db6ac;
+  --color-secondary: #F59E0B;
+
+  --color-bg-main: #F1F5F9;
+  /* Slate-100 */
+  --color-bg-soft: #E2E8F0;
+  /* Slate-200 */
+  --color-bg-card: #ffffff;
+
+  --color-text-main: #0F172A;
+  /* Slate-900 */
+  --color-text-muted: #475569;
+  /* Slate-600 */
+  --color-text-light: #f8fafc;
+
+  --gradient-main: linear-gradient(135deg, #00A896 0%, #00897B 100%);
+  --gradient-hero: radial-gradient(circle at 10% 20%, rgba(148, 163, 184, 0.1) 0%, rgba(241, 245, 249, 0.95) 90%);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 24px;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.01);
+  --shadow-glow: 0 0 20px rgba(0, 168, 150, 0.2);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--color-bg-main);
+  color: var(--color-text-main);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Button Components */
+.btn {
+  @apply inline-flex items-center justify-center px-6 py-2.5 rounded-xl font-medium transition-all duration-300 transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.btn-primary {
+  background-image: var(--gradient-main);
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 150, 136, 0.3), 0 2px 4px -1px rgba(0, 150, 136, 0.15);
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 10px 15px -3px rgba(0, 150, 136, 0.4), 0 4px 6px -2px rgba(0, 150, 136, 0.2);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  @apply bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:text-slate-900 shadow-sm;
+}
+
+/* Custom Utilities that extend Tailwind */
+.text-gradient {
+  background: linear-gradient(to right, #00A896, #2DD4BF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.glass-card {
+  background: rgba(248, 250, 252, 0.6);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(203, 213, 225, 0.5);
+  box-shadow: var(--shadow-lg);
+}
+
+.hero-pattern {
+  background-color: #f1f5f9;
+  background-image: radial-gradient(#00A896 0.5px, transparent 0.5px), radial-gradient(#00A896 0.5px, #f1f5f9 0.5px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  opacity: 0.6;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Custom scrollbar override */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
