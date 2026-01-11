@@ -142,7 +142,7 @@ const Home = () => {
                             <p className="text-slate-600 leading-relaxed mb-6">
                                 Suivez l'historique complet de vos actifs et gérez vos stocks de pièces critiques en temps réel.
                             </p>
-                            <Link to="/features" className="text-primary font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">
+                            <Link to="/visuel-gmaologix" className="text-primary font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">
                                 Voir les modules <ArrowRight size={16} />
                             </Link>
                         </div>
@@ -156,7 +156,7 @@ const Home = () => {
                             <p className="text-slate-600 leading-relaxed mb-6">
                                 Planifiez vos maintenances préventives et suivez les ordres de travail curatifs sur le terrain.
                             </p>
-                            <Link to="/features" className="text-primary font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">
+                            <Link to="/visuel-gmaologix" className="text-primary font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">
                                 Voir les modules <ArrowRight size={16} />
                             </Link>
                         </div>
@@ -170,7 +170,7 @@ const Home = () => {
                             <p className="text-slate-600 leading-relaxed mb-6">
                                 Visualisez vos indicateurs clés (MTBF, MTTR) avec des tableaux de bord dynamiques et exportables.
                             </p>
-                            <Link to="/features" className="text-primary font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">
+                            <Link to="/visuel-gmaologix" className="text-primary font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">
                                 Voir les modules <ArrowRight size={16} />
                             </Link>
                         </div>
